@@ -1,0 +1,49 @@
+{
+  "kind": "collectionType",
+  "collectionName": "table-types",
+  "info": {
+    "singularName": "table-type",
+    "pluralName": "table-types",
+    "displayName": "Table Type",
+    "description": "Predefined table configurations"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "capacity": {
+      "type": "integer",
+      "required": true,
+      "min": 1,
+      "default": 2
+    },
+    "available": {
+      "type": "integer",
+      "required": true,
+      "min": 0,
+      "default": 1
+    },
+    "name": {
+      "type": "string",
+      "required": true,
+      "default": "Cozy Corner",
+      "maxLength": 50
+    },
+    "icon": {
+      "type": "string",
+      "required": true,
+      "default": "FiHeart"
+    },
+    "description": {
+      "type": "text",
+      "required": true,
+      "default": "Perfect for romantic dinners and intimate conversations"
+    },
+    "color": {
+      "type": "string",
+      "required": true,
+      "default": "rose",
+      "maxLength": 20
+    }
+  }
+}
