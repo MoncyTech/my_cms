@@ -4,18 +4,15 @@ module.exports = ({ env }) => ({
     config: {
       provider: "nodemailer",
       providerOptions: {
-        host: env("SMTP_HOST", "smtp.example.com"),
-        port: env("SMTP_PORT", 587),
+        host: env("BREVO_HOST"),
+        port: env("BREVO_PORT"),
         auth: {
-          user: env("SMTP_USERNAME"),
-          pass: env("SMTP_PASSWORD"),
+          user: env("BREVO_USER"), // your brevo login (usually email)
+          pass: env("BREVO_KEY"), // brevo api key
         },
-        // Uncomment for SSL
-        // secure: true,
       },
       settings: {
-        defaultFrom: env("SMTP_DEFAULT_FROM", "no-reply@moncees.com"),
-        defaultReplyTo: env("SMTP_DEFAULT_REPLY_TO", "contact@moncees.com"),
+        defaultFrom: env("RESTAURANT_EMAIL")
       },
     },
   },

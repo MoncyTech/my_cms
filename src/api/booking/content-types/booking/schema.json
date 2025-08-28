@@ -10,5 +10,29 @@
     "draftAndPublish": true
   },
   "pluginOptions": {},
-  "attributes": {}
+  "attributes": {
+    "customer_name": {
+      "type": "string"
+    },
+    "email": {
+      "type": "email"
+    },
+    "booking_status": {
+      "type": "enumeration",
+      "default": "pending",
+      "enum": ["pending", "accepted", "rejected"]
+    },
+    "booking_startAt": {
+      "type": "datetime"
+    },
+    "booking_endAt": {
+      "type": "datetime"
+    },
+    "booking_id": {
+      "type": "uid",
+      "unique": true,
+      "required": true,
+      "regex": "^BK[A-Z0-9]+$"
+    }
+  }
 }
