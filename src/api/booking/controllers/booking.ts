@@ -9,6 +9,122 @@ function generateBookingId() {
   return `BK${(timestamp + randomPart).substring(0, 10)}`;
 }
 
+export function bookingRequestConsumerTemplate({
+  bookingId,
+  customerName,
+  restaurantName,
+  bookingDate,
+  bookingTime,
+  guests,
+}: {
+  bookingId: string | number;
+  customerName: string;
+  restaurantName: string;
+  bookingDate: string;
+  bookingTime: string;
+  guests: number;
+}) {
+  return {
+    subject: `Booking Request (#${bookingId}) at ${restaurantName}`,
+    text: `
+Hi ${customerName},
+
+Thank you for choosing ${restaurantName}!
+
+We’ve received your booking request:
+- Booking ID: ${bookingId}
+- Date: ${bookingDate}
+- Time: ${bookingTime}
+- Guests: ${guests}
+
+Your request is currently **pending approval** by the restaurant.  
+You’ll receive a confirmation email once it’s approved.
+
+Best regards,  
+${restaurantName} Team
+    `,
+    html: `
+      <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+        <h2 style="color:#2c3e50;">Booking Request Received</h2>
+        <p>Hi <strong>${customerName}</strong>,</p>
+        <p>Thank you for choosing <strong>${restaurantName}</strong>!</p>
+        <p>We’ve received your booking request:</p>
+        <ul>
+          <li><strong>Booking ID:</strong> ${bookingId}</li>
+          <li><strong>Date:</strong> ${bookingDate}</li>
+          <li><strong>Time:</strong> ${bookingTime}</li>
+          <li><strong>Guests:</strong> ${guests}</li>
+        </ul>
+        <p>Your request is currently <strong>pending approval</strong> by the restaurant.<br/>
+        You’ll receive a confirmation email once it’s approved.</p>
+        <p>Best regards,<br/>${restaurantName} Team</p>
+      </div>
+    `,
+  };
+}
+
+export function bookingRequestOwnerTemplate({
+  bookingId,
+  customerName,
+  customerEmail,
+  restaurantName,
+  bookingDate,
+  bookingTime,
+  guests,
+  approveUrl,
+  rejectUrl,
+}: {
+  bookingId: string | number;
+  customerName: string;
+  customerEmail: string;
+  restaurantName: string;
+  bookingDate: string;
+  bookingTime: string;
+  guests: number;
+  approveUrl: string;
+  rejectUrl: string;
+}) {
+  return {
+    subject: `New Booking Request (#${bookingId}) for ${restaurantName}`,
+    text: `
+Hello ${restaurantName} Team,
+
+You have received a new booking request:
+
+- Booking ID: ${bookingId}
+- Customer: ${customerName} (${customerEmail})
+- Date: ${bookingDate}
+- Time: ${bookingTime}
+- Guests: ${guests}
+
+Please approve or reject this booking:
+
+Approve: ${approveUrl}
+Reject: ${rejectUrl}
+    `,
+    html: `
+      <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+        <h2 style="color:#2c3e50;">New Booking Request</h2>
+        <p style="text-transform: capitalize;">Hello <strong>${restaurantName} Team</strong>,</p>
+        <p>You have received a new booking request:</p>
+        <ul>
+          <li><strong>Booking ID:</strong> ${bookingId}</li>
+          <li><strong>Customer:</strong> ${customerName} (${customerEmail})</li>
+          <li><strong>Date:</strong> ${bookingDate}</li>
+          <li><strong>Time:</strong> ${bookingTime}</li>
+          <li><strong>Guests:</strong> ${guests}</li>
+        </ul>
+        <p>Please approve or reject this booking:</p>
+        <div style="margin-top:20px;">
+          <a href="${approveUrl}" style="background-color:#27ae60;color:#fff;padding:10px 15px;text-decoration:none;border-radius:5px;margin-right:10px;">✅ Approve</a>
+          <a href="${rejectUrl}" style="background-color:#e74c3c;color:#fff;padding:10px 15px;text-decoration:none;border-radius:5px;">❌ Reject</a>
+        </div>
+        <p style="margin-top:20px;">Best regards,<br/>Booking System</p>
+      </div>
+    `,
+  };
+}
+
 export default factories.createCoreController(
   "api::booking.booking",
   ({ strapi }) => ({
@@ -19,6 +135,10 @@ export default factories.createCoreController(
           "server.restaurantEmail",
           process.env.RESTAURANT_EMAIL
         );
+        const restaurantName = strapi.config.get(
+          "server.restaurantName",
+          process.env.RESTAURANT_NAME
+        );
 
         const data = {
           customer_name: name,
@@ -27,9 +147,34 @@ export default factories.createCoreController(
           booking_endAt: endAt,
           status: "pending",
           publishedAt: null,
+          booking_id: generateBookingId(),
         };
 
-        data["booking_id"] = generateBookingId();
+        const template_consumer = bookingRequestConsumerTemplate({
+          bookingId: data.booking_id,
+          customerName: data.customer_name,
+          restaurantName: restaurantName, // Replace with actual restaurant name if available
+          bookingDate: data.booking_startAt,
+          bookingTime: new Date(data.booking_startAt).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+          guests: ctx.request.body.guests ?? 1, // Replace with actual guests value if available
+        });
+        const template_owner = bookingRequestOwnerTemplate({
+          bookingId: data.booking_id,
+          customerName: data.customer_name,
+          customerEmail: data.email,
+          restaurantName: restaurantName, // Replace with actual restaurant name if available
+          bookingDate: data.booking_startAt,
+          bookingTime: new Date(data.booking_startAt).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+          guests: ctx.request.body.guests ?? 1, // Replace with actual guests value if available
+          approveUrl: `https://your-frontend.com/bookings/${data.booking_id}/approve`, // Replace with actual URL
+          rejectUrl: `https://your-frontend.com/bookings/${data.booking_id}/reject`, // Replace with actual URL
+        });
 
         if (!data.customer_name) return ctx.badRequest("Name is required");
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email))
@@ -49,8 +194,9 @@ export default factories.createCoreController(
         try {
           await strapi.plugin("email").service("email").send({
             to: data.email,
-            subject: "Booking Requested",
-            text: "Test email from Strapi + Brevo",
+            subject: template_consumer.subject,
+            text: template_consumer.text,
+            html: template_consumer.html,
           });
           strapi.log.info("✅ Email sent successfully");
         } catch (err) {
@@ -60,8 +206,9 @@ export default factories.createCoreController(
         // 3. Send email to restaurant owner
         await strapi.plugins["email"].services.email.send({
           to: restaurantEmail,
-          subject: "New Booking Request",
-          text: `A new booking request has been made by ${name} (${email}). Please review and confirm.`,
+          subject: template_owner.subject,
+          text: template_owner.text,
+          html: template_owner.html,
         });
 
         return booking;

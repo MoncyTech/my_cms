@@ -5,4 +5,7 @@ export default ({ env }) => ({
     keys: env.array("APP_KEYS"),
   },
   restaurantEmail: env("RESTAURANT_EMAIL"),
+  restaurantName: String(env("RESTAURANT_NAME"))
+    .replace("_", " ")
+    .replace(/\b\w/g, (char) => char.toUpperCase()),
 });
