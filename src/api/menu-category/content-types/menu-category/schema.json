@@ -22,13 +22,16 @@
     "description": {
       "type": "richtext"
     },
-    "image": {
-      "type": "media",
-      "multiple": false,
-      "required": false
-    },
     "displayOrder": {
       "type": "integer"
+    },
+    "imgUrl": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files"
+      ]
     }
   }
 }
