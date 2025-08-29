@@ -1,0 +1,9 @@
+{
+  "name": "custom-page",
+  "version": "1.0.0",
+  "description": "Custom page plugin",
+  "strapi": {
+    "name": "custom-page",
+    "kind": "plugin"
+  }
+}

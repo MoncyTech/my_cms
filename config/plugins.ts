@@ -12,7 +12,7 @@ module.exports = ({ env }) => ({
         },
       },
       settings: {
-        defaultFrom: env("RESTAURANT_EMAIL")
+        defaultFrom: env("RESTAURANT_EMAIL"),
       },
     },
   },
@@ -33,5 +33,9 @@ module.exports = ({ env }) => ({
         },
       },
     },
+  },
+  "custom-page": {
+    enabled: true,
+    resolve: "./src/plugins/custom-page",
   },
 });
