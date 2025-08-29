@@ -20,7 +20,11 @@
     "booking_status": {
       "type": "enumeration",
       "default": "pending",
-      "enum": ["pending", "accepted", "rejected"]
+      "enum": [
+        "pending",
+        "accepted",
+        "rejected"
+      ]
     },
     "booking_startAt": {
       "type": "datetime"
@@ -30,9 +34,11 @@
     },
     "booking_id": {
       "type": "uid",
-      "unique": true,
       "required": true,
       "regex": "^BK[A-Z0-9]+$"
+    },
+    "message": {
+      "type": "text"
     }
   }
 }

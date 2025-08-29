@@ -385,9 +385,7 @@ export interface ApiBookingBooking extends Struct.CollectionTypeSchema {
   };
   attributes: {
     booking_endAt: Schema.Attribute.DateTime;
-    booking_id: Schema.Attribute.UID &
-      Schema.Attribute.Required &
-      Schema.Attribute.Unique;
+    booking_id: Schema.Attribute.UID & Schema.Attribute.Required;
     booking_startAt: Schema.Attribute.DateTime;
     booking_status: Schema.Attribute.Enumeration<
       ['pending', 'accepted', 'rejected']
@@ -404,6 +402,7 @@ export interface ApiBookingBooking extends Struct.CollectionTypeSchema {
       'api::booking.booking'
     > &
       Schema.Attribute.Private;
+    message: Schema.Attribute.Text;
     publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &

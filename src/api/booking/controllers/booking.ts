@@ -38,7 +38,7 @@ We’ve received your booking request:
 - Guests: ${guests}
 
 Your request is currently **pending approval** by the restaurant.  
-You’ll receive a confirmation email once it’s approved.
+You’ll receive a confirmation email once it’s accepted.
 
 Best regards,  
 ${restaurantName} Team
@@ -56,7 +56,7 @@ ${restaurantName} Team
           <li><strong>Guests:</strong> ${guests}</li>
         </ul>
         <p>Your request is currently <strong>pending approval</strong> by the restaurant.<br/>
-        You’ll receive a confirmation email once it’s approved.</p>
+        You’ll receive a confirmation email once it’s accepted.</p>
         <p>Best regards,<br/>${restaurantName} Team</p>
       </div>
     `,

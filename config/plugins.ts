@@ -38,4 +38,8 @@ module.exports = ({ env }) => ({
     enabled: true,
     resolve: "./src/plugins/custom-page",
   },
+  "booking-approval": {
+    enabled: true,
+    resolve: "./src/plugins/booking-approval",
+  },
 });

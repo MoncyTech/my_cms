@@ -20,6 +20,7 @@
     "@strapi/plugin-users-permissions": "5.18.0",
     "@strapi/provider-email-nodemailer": "^5.20.0",
     "@strapi/provider-upload-cloudinary": "^5.20.0",
+    "@strapi/sdk-plugin": "^5.3.2",
     "@strapi/strapi": "5.18.0",
     "better-sqlite3": "11.3.0",
     "nodemailer": "^7.0.5",
