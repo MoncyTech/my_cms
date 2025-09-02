@@ -167,7 +167,6 @@ const BookingApprovalPage: React.FC = () => {
         }
       );
 
-
       toggleNotification({
         type: 'success',
         message: `Booking ${actionType_1}d successfully!`,
@@ -535,32 +534,33 @@ const BookingApprovalPage: React.FC = () => {
               </Flex>
             )}
 
+            <Dialog.Cancel>
+              <Button variant="tertiary" className="rounded-lg px-4">
+                Close
+              </Button>
+            </Dialog.Cancel>
             {/* Right side: Cancel / Confirm (for approve/reject flow) */}
-            <Flex gap={2}>
-              <Dialog.Cancel>
-                <Button variant="tertiary" className="rounded-lg px-4">
-                  Close
-                </Button>
-              </Dialog.Cancel>
-
-              {
-                <Dialog.Action>
-                  <Button
-                    variant={selectedBooking?.status === 'rejected' ? 'success' : 'danger'}
-                    onClick={() => {
-                      if (selectedBooking?.status === 'rejected') {
-                        handleBookingAction('approve');
-                      } else {
-                        handleBookingAction('reject');
-                      }
-                    }}
-                    className="rounded-lg px-4 font-medium"
-                  >
-                    Change to {selectedBooking?.status === 'rejected' ? 'Approval' : 'Rejection'}
-                  </Button>
-                </Dialog.Action>
-              }
-            </Flex>
+            {selectedBooking?.status !== 'pending' && (
+              <Flex gap={2}>
+                {
+                  <Dialog.Action>
+                    <Button
+                      variant={selectedBooking?.status === 'rejected' ? 'success' : 'danger'}
+                      onClick={() => {
+                        if (selectedBooking?.status === 'rejected') {
+                          handleBookingAction('approve');
+                        } else {
+                          handleBookingAction('reject');
+                        }
+                      }}
+                      className="rounded-lg px-4 font-medium"
+                    >
+                      Change to {selectedBooking?.status === 'rejected' ? 'Approval' : 'Rejection'}
+                    </Button>
+                  </Dialog.Action>
+                }
+              </Flex>
+            )}
           </Dialog.Footer>
         </Dialog.Content>
       </Dialog.Root>
