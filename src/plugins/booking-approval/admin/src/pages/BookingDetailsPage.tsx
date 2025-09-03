@@ -59,7 +59,7 @@ const BookingDetailsPage = () => {
           },
         },
         {
-          headers: { Authorization: `Bearer ${token}` },    
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
 
@@ -75,22 +75,20 @@ const BookingDetailsPage = () => {
   if (!booking) return <Typography>No booking found.</Typography>;
 
   return (
-    <Box
-      padding={8}
-      background="neutral0"
-      shadow="filterShadow"
-      hasRadius
-      maxWidth="850px"
-      margin="0 auto"
-    >
+    <Box padding={8} background="neutral150" shadow="filterShadow" hasRadius margin="40px">
       {/* Header */}
-      <Typography variant="alpha" fontWeight="bold" marginBottom={6}>
+      <Typography
+        as="h1"
+        fontWeight="bold"
+        marginBottom={6}
+        className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl"
+      >
         Booking Request Approval
       </Typography>
 
       {/* Booking Details */}
-      <Box marginBottom={6}>
-        <Typography variant="delta" fontWeight="semibold" marginBottom={4}>
+      <Box marginBottom={6} marginTop={4} padding={6} background="neutral0" hasRadius>
+        <Typography variant="delta" fontWeight="semibold" marginBottom={10}>
           Booking Details
         </Typography>
 
@@ -110,11 +108,25 @@ const BookingDetailsPage = () => {
               Guests: <span className="text-gray-900 font-medium">{booking.guests}</span>
             </Typography>
           </Grid.Item>
+
+          {/* Highlighted Status */}
           <Grid.Item col={6}>
             <Typography textColor="neutral600">
-              Status: <span className="text-gray-900 font-medium">{booking.booking_status}</span>
+              Status:{' '}
+              <span
+                className={`px-2 py-1 rounded-full text-sm font-semibold ${
+                  booking.booking_status === 'approved'
+                    ? 'bg-green-100 text-green-700'
+                    : booking.booking_status === 'rejected'
+                      ? 'bg-red-100 text-red-700'
+                      : 'bg-yellow-100 text-yellow-700'
+                }`}
+              >
+                {booking.booking_status}
+              </span>
             </Typography>
           </Grid.Item>
+
           <Grid.Item col={6}>
             <Typography textColor="neutral600">
               Start At:{' '}
@@ -142,13 +154,21 @@ const BookingDetailsPage = () => {
       {/* Optional Message */}
       <Box marginBottom={6}>
         <Field.Root>
-          <Field.Label>Message to Customer (Optional)</Field.Label>
+          <Field.Label>
+            Message to Customer <span className="text-red-500">*</span>
+          </Field.Label>
           <Textarea
+            background="neutral100"
             placeholder="Enter approval or rejection message..."
             value={message}
             onChange={(e: any) => setMessage(e.target.value)}
             rows={4}
           />
+          {!message && (
+            <Typography variant="pi" textColor="danger600">
+              This field is required.
+            </Typography>
+          )}
         </Field.Root>
       </Box>
 
@@ -160,7 +180,10 @@ const BookingDetailsPage = () => {
             setSelectedAction('reject');
             setIsModalOpen(true);
           }}
-          style={{ background: '#f87171', color: 'white' }}
+          style={{
+            background: '#ef4444',
+            color: 'white',
+          }}
         >
           Reject
         </Button>
@@ -170,7 +193,10 @@ const BookingDetailsPage = () => {
             setSelectedAction('approve');
             setIsModalOpen(true);
           }}
-          style={{ background: '#4ade80', color: 'white' }}
+          style={{
+            background: '#22c55e',
+            color: 'white',
+          }}
         >
           Approve
         </Button>
@@ -189,8 +215,9 @@ const BookingDetailsPage = () => {
               Are you sure you want to{' '}
               <strong>{selectedAction === 'approve' ? 'approve' : 'reject'}</strong> this booking?
             </Typography>
+
             {message && (
-              <Box marginTop={4} padding={4} background="neutral100" hasRadius>
+              <Box marginTop={4} padding={4} background="neutral200" hasRadius>
                 <Typography textColor="neutral600">
                   Message: <span className="text-gray-900">{message}</span>
                 </Typography>
@@ -205,7 +232,7 @@ const BookingDetailsPage = () => {
               <Button
                 onClick={confirmAction}
                 style={{
-                  background: selectedAction === 'approve' ? '#4ade80' : '#f87171',
+                  background: selectedAction === 'approve' ? '#22c55e' : '#ef4444',
                   color: 'white',
                 }}
               >

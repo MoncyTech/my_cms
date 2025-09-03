@@ -5,6 +5,7 @@ function bookingConfirmedConsumerTemplate({
   bookingDate,
   bookingTime,
   guests,
+  message, // optional
 }: {
   bookingId: string | number;
   customerName: string;
@@ -12,6 +13,7 @@ function bookingConfirmedConsumerTemplate({
   bookingDate: string;
   bookingTime: string;
   guests: number;
+  message?: string; // optional argument
 }) {
   return {
     subject: `Booking Confirmed (#${bookingId}) at ${restaurantName}`,
@@ -26,7 +28,7 @@ Here are your booking details:
 - Time: ${bookingTime}
 - Guests: ${guests}
 
-We look forward to hosting you!  
+${message ? `Note from us: ${message}\n\n` : ""}We look forward to hosting you!  
 
 Best regards,  
 ${restaurantName} Team
@@ -35,7 +37,8 @@ ${restaurantName} Team
       <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
         <h2 style="color:#27ae60;">Booking Confirmed 🎉</h2>
         <p>Hi <strong>${customerName}</strong>,</p>
-        <p>Good news! Your booking at <strong>${restaurantName}</strong> has been <span style="color:#27ae60; font-weight:bold;">confirmed</span>.</p>
+        <p>Good news! Your booking at <strong>${restaurantName}</strong> has been 
+        <span style="color:#27ae60; font-weight:bold;">confirmed</span>.</p>
         <p>Here are your booking details:</p>
         <ul>
           <li><strong>Booking ID:</strong> ${bookingId}</li>
@@ -43,6 +46,7 @@ ${restaurantName} Team
           <li><strong>Time:</strong> ${bookingTime}</li>
           <li><strong>Guests:</strong> ${guests}</li>
         </ul>
+        ${message ? `<p style="background:#f9f9f9; padding:10px; border-left:4px solid #27ae60;"><em>${message}</em></p>` : ""}
         <p>We look forward to hosting you!</p>
         <p>Best regards,<br/>${restaurantName} Team</p>
       </div>
@@ -158,6 +162,7 @@ export default {
         bookingDate: result.booking_startAt.split("T")[0],
         bookingTime: result.booking_startAt.split("T")[1].substring(0, 5),
         guests: result.guests || 0,
+        message: result.message || "",
       });
 
     if (result.booking_status == "rejected") {

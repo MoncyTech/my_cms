@@ -150,6 +150,21 @@ export default factories.createCoreController(
           booking_id: generateBookingId(),
         };
 
+        if (!data.customer_name) return ctx.badRequest("Name is required");
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email))
+          return ctx.badRequest("Invalid email");
+        if (isNaN(Date.parse(data.booking_startAt)))
+          return ctx.badRequest("Invalid start date");
+        if (isNaN(Date.parse(data.booking_endAt)))
+          return ctx.badRequest("Invalid end date");
+        if (new Date(data.booking_endAt) <= new Date(data.booking_startAt))
+          return ctx.badRequest("End date must be after start date");
+
+        // 1. Create booking with status "pending"
+        const booking = await strapi.db.query("api::booking.booking").create({
+          data,
+        });
+
         const template_consumer = bookingRequestConsumerTemplate({
           bookingId: data.booking_id,
           customerName: data.customer_name,
@@ -172,25 +187,9 @@ export default factories.createCoreController(
             minute: "2-digit",
           }),
           guests: ctx.request.body.guests ?? 1, // Replace with actual guests value if available
-          approveUrl: `https://your-frontend.com/bookings/${data.booking_id}/approve`, // Replace with actual URL
-          rejectUrl: `https://your-frontend.com/bookings/${data.booking_id}/reject`, // Replace with actual URL
+          approveUrl: `${process.env.BASE_URL_CMS}/admin/plugins/booking-approval/bookings/${booking?.documentId}`, // Replace with actual URL
+          rejectUrl: `${process.env.BASE_URL_CMS}/admin/plugins/booking-approval/bookings/${booking?.documentId}`, // Replace with actual URL
         });
-
-        if (!data.customer_name) return ctx.badRequest("Name is required");
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email))
-          return ctx.badRequest("Invalid email");
-        if (isNaN(Date.parse(data.booking_startAt)))
-          return ctx.badRequest("Invalid start date");
-        if (isNaN(Date.parse(data.booking_endAt)))
-          return ctx.badRequest("Invalid end date");
-        if (new Date(data.booking_endAt) <= new Date(data.booking_startAt))
-          return ctx.badRequest("End date must be after start date");
-
-        // 1. Create booking with status "pending"
-        const booking = await strapi.db.query("api::booking.booking").create({
-          data,
-        });
-
         try {
           await strapi.plugin("email").service("email").send({
             to: data.email,
