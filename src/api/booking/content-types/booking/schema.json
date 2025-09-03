@@ -20,11 +20,7 @@
     "booking_status": {
       "type": "enumeration",
       "default": "pending",
-      "enum": [
-        "pending",
-        "accepted",
-        "rejected"
-      ]
+      "enum": ["pending", "accepted", "rejected"]
     },
     "booking_startAt": {
       "type": "datetime"
@@ -32,6 +28,12 @@
     "booking_endAt": {
       "type": "datetime"
     },
+
+    "guests": {
+      "type": "integer",
+      "default": 1
+    },
+
     "booking_id": {
       "type": "uid",
       "required": true,
