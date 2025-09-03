@@ -4,6 +4,7 @@
   "private": true,
   "description": "A Strapi application",
   "scripts": {
+    "prebuild": "cd src/plugins/booking-approval && npm install && npm run build",
     "build": "strapi build",
     "console": "strapi console",
     "deploy": "strapi deploy",
