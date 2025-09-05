@@ -15,6 +15,9 @@ import {
 } from '@strapi/design-system';
 import { useFetchClient } from '@strapi/strapi/admin';
 
+const STRAPI_API_KEY =
+  '9f0685ea624f8991398e57683f462523346fe80116510116937c402b161eba6fa8c310ea9da0b9abf2bda5477947319ae95fee8404c4a1f494546cff82cfc1c1c70cc2a7043f44e70d04f9c9039c69641c0286bfd0967641fb15c9fb4493aef6223e372414225cdd91914e0671b4a6026894e3e403269750e6073efe08499bef';
+
 const BookingDetailsPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -25,9 +28,7 @@ const BookingDetailsPage = () => {
   const [message, setMessage] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAction, setSelectedAction] = useState<'approve' | 'reject' | null>(null);
-
-  const token =
-    '9adf4b955e6194e8f20ec3d4296004aecfd492fadffa310de4d41486bd272ac103d00323fc3efa8dfdf9a5bcc9e4f89060901b81174da18601ffe964543608fdc07d1791a6bc6c19ddbff4967e6363c8d96e9b1578b5f74ac6e5ba0e3a8092b6727d8187b5b9415af4b72579ed7938c6767f3eb4b1df9b80ad392649ce68b41d'; // better to inject from config
+  const token = STRAPI_API_KEY;
   // fetch booking details
   useEffect(() => {
     const fetchBooking = async () => {

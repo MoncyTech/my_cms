@@ -23,7 +23,8 @@ import { SingleSelectOption } from '@strapi/design-system';
 import { Searchbar } from '@strapi/design-system';
 import { ArrowDown, ArrowUp } from '@strapi/icons';
 import { TextInput } from '@strapi/design-system';
-
+const STRAPI_API_KEY =
+  '9f0685ea624f8991398e57683f462523346fe80116510116937c402b161eba6fa8c310ea9da0b9abf2bda5477947319ae95fee8404c4a1f494546cff82cfc1c1c70cc2a7043f44e70d04f9c9039c69641c0286bfd0967641fb15c9fb4493aef6223e372414225cdd91914e0671b4a6026894e3e403269750e6073efe08499bef';
 interface Booking {
   documentId: any;
   id: number;
@@ -53,9 +54,8 @@ const BookingApprovalPage: React.FC = () => {
   const { get, put } = useFetchClient();
   const { toggleNotification } = useNotification();
   const { formatAPIError } = useAPIErrorHandler();
-  const token =
-    'ee2db74bb9468a51535952af9a59133a13de67816940ce295fb29df52a8551fd57757abdf7dc5cb9aa085cfe8b5160d0f76e66b445a50982921f25c88a4ab029c73d881dfa2ca2b465d929dbc0839e15167b6b8c396bff90c4a421e02de5c81eea03d6f61e2e875363af6c962f883954c46c48e64d3dfa67aad6cee45f22ae8f';
-
+  // Cast to any to bypass TypeScript checking
+  const token = STRAPI_API_KEY;
   // Fetch bookings
   const fetchBookings = async () => {
     try {
