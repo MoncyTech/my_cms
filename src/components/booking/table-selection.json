@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_booking_table_selections",
+  "info": {
+    "displayName": "Table Selection"
+  },
+  "options": {},
+  "attributes": {
+    "quantity": {
+      "type": "integer",
+      "required": true,
+      "default": 1
+    },
+    "table_id": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::table-type.table-type"
+    }
+  }
+}

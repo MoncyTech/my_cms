@@ -130,7 +130,6 @@ export default factories.createCoreController(
   ({ strapi }) => ({
     async create(ctx) {
       try {
-        const { name, email, startAt, endAt } = ctx.request.body;
         const restaurantEmail = strapi.config.get(
           "server.restaurantEmail",
           process.env.RESTAURANT_EMAIL
@@ -139,20 +138,33 @@ export default factories.createCoreController(
           "server.restaurantName",
           process.env.RESTAURANT_NAME
         );
-
+        const {
+          name,
+          email,
+          startAt,
+          endAt,
+          sel,
+          guests = 1,
+          message,
+        } = ctx.request.body;
+        console.log({sel})
         const data = {
           customer_name: name,
           email,
           booking_startAt: startAt,
           booking_endAt: endAt,
-          status: "pending",
+          booking_status: "pending", // ✅ correct field
+          guests,
+          message: message || null,
           publishedAt: null,
           booking_id: generateBookingId(),
+          table_selections: sel || [], // sel should be array of component values
         };
 
+        // ✅ validations
         if (!data.customer_name) return ctx.badRequest("Name is required");
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email))
-          return ctx.badRequest("Invalid email");
+          return ctx.badRequest("Invalid email address");
         if (isNaN(Date.parse(data.booking_startAt)))
           return ctx.badRequest("Invalid start date");
         if (isNaN(Date.parse(data.booking_endAt)))
@@ -160,11 +172,11 @@ export default factories.createCoreController(
         if (new Date(data.booking_endAt) <= new Date(data.booking_startAt))
           return ctx.badRequest("End date must be after start date");
 
-        // 1. Create booking with status "pending"
-        const booking = await strapi.db.query("api::booking.booking").create({
-          data,
-        });
-
+        // ✅ create booking
+        const booking = await strapi.db
+          .query("api::booking.booking")
+          .create({ data });
+  console.log({booking})
         const template_consumer = bookingRequestConsumerTemplate({
           bookingId: data.booking_id,
           customerName: data.customer_name,
@@ -197,21 +209,22 @@ export default factories.createCoreController(
             text: template_consumer.text,
             html: template_consumer.html,
           });
+          await strapi.plugins["email"].services.email.send({
+            to: restaurantEmail,
+            subject: template_owner.subject,
+            text: template_owner.text,
+            html: template_owner.html,
+          });
           strapi.log.info("✅ Email sent successfully");
         } catch (err) {
           strapi.log.error("❌ Email sending failed", err);
         }
 
         // 3. Send email to restaurant owner
-        await strapi.plugins["email"].services.email.send({
-          to: restaurantEmail,
-          subject: template_owner.subject,
-          text: template_owner.text,
-          html: template_owner.html,
-        });
 
         return booking;
       } catch (err) {
+        console.log(err)
         ctx.throw(500, err);
       }
     },
