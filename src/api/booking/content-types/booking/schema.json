@@ -41,6 +41,11 @@
     },
     "message": {
       "type": "text"
+    },
+    "table_selections": {
+      "type": "component",
+      "repeatable": true,
+      "component": "booking.table-selection"
     }
   }
 }

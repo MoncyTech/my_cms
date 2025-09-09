@@ -41,5 +41,10 @@ module.exports = ({ env }) => ({
   "booking-approval": {
     enabled: true,
     resolve: "./src/plugins/booking-approval",
+    config: {
+      publicEnv: {
+        STRAPI_API_KEY: env("STRAPI_API_KEY"),
+      },
+    },
   },
 });
