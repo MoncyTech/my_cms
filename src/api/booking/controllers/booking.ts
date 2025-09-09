@@ -16,6 +16,7 @@ export function bookingRequestConsumerTemplate({
   bookingDate,
   bookingTime,
   guests,
+  table_selections,
 }: {
   bookingId: string | number;
   customerName: string;
@@ -23,6 +24,7 @@ export function bookingRequestConsumerTemplate({
   bookingDate: string;
   bookingTime: string;
   guests: number;
+  table_selections?: any[];
 }) {
   return {
     subject: `Booking Request (#${bookingId}) at ${restaurantName}`,
@@ -54,6 +56,16 @@ ${restaurantName} Team
           <li><strong>Date:</strong> ${bookingDate}</li>
           <li><strong>Time:</strong> ${bookingTime}</li>
           <li><strong>Guests:</strong> ${guests}</li>
+            ${
+              Array.isArray(table_selections) && table_selections.length
+                ? table_selections
+                    .map(
+                      (sel: any) =>
+                        `<li><strong>Table Type:</strong> ${sel.tableType || "N/A"}<br/><strong>Quantity:</strong> ${sel.qty || 1}</li>`
+                    )
+                    .join("")
+                : ""
+            }
         </ul>
         <p>Your request is currently <strong>pending approval</strong> by the restaurant.<br/>
         You’ll receive a confirmation email once it’s accepted.</p>
@@ -73,6 +85,7 @@ export function bookingRequestOwnerTemplate({
   guests,
   approveUrl,
   rejectUrl,
+  table_selections,
 }: {
   bookingId: string | number;
   customerName: string;
@@ -83,6 +96,7 @@ export function bookingRequestOwnerTemplate({
   guests: number;
   approveUrl: string;
   rejectUrl: string;
+  table_selections?: any[];
 }) {
   return {
     subject: `New Booking Request (#${bookingId}) for ${restaurantName}`,
@@ -113,6 +127,16 @@ Reject: ${rejectUrl}
           <li><strong>Date:</strong> ${bookingDate}</li>
           <li><strong>Time:</strong> ${bookingTime}</li>
           <li><strong>Guests:</strong> ${guests}</li>
+            ${
+              Array.isArray(table_selections) && table_selections.length
+                ? table_selections
+                    .map(
+                      (sel: any) =>
+                        `<li><strong>Table Type:</strong> ${sel.tableType || "N/A"}<br/><strong>Quantity:</strong> ${sel.qty || 1}</li>`
+                    )
+                    .join("")
+                : ""
+            }
         </ul>
         <p>Please approve or reject this booking:</p>
         <div style="margin-top:20px;">
@@ -143,11 +167,10 @@ export default factories.createCoreController(
           email,
           startAt,
           endAt,
-          sel,
+          table_selections,
           guests = 1,
           message,
         } = ctx.request.body;
-        console.log({sel})
         const data = {
           customer_name: name,
           email,
@@ -158,7 +181,7 @@ export default factories.createCoreController(
           message: message || null,
           publishedAt: null,
           booking_id: generateBookingId(),
-          table_selections: sel || [], // sel should be array of component values
+          table_selections: table_selections || [], // sel should be array of component values
         };
 
         // ✅ validations
@@ -171,12 +194,10 @@ export default factories.createCoreController(
           return ctx.badRequest("Invalid end date");
         if (new Date(data.booking_endAt) <= new Date(data.booking_startAt))
           return ctx.badRequest("End date must be after start date");
-
         // ✅ create booking
         const booking = await strapi.db
           .query("api::booking.booking")
           .create({ data });
-  console.log({booking})
         const template_consumer = bookingRequestConsumerTemplate({
           bookingId: data.booking_id,
           customerName: data.customer_name,
@@ -187,6 +208,7 @@ export default factories.createCoreController(
             minute: "2-digit",
           }),
           guests: ctx.request.body.guests ?? 1, // Replace with actual guests value if available
+          table_selections,
         });
         const template_owner = bookingRequestOwnerTemplate({
           bookingId: data.booking_id,
@@ -201,6 +223,7 @@ export default factories.createCoreController(
           guests: ctx.request.body.guests ?? 1, // Replace with actual guests value if available
           approveUrl: `${process.env.BASE_URL_CMS}/admin/plugins/booking-approval/bookings/${booking?.documentId}`, // Replace with actual URL
           rejectUrl: `${process.env.BASE_URL_CMS}/admin/plugins/booking-approval/bookings/${booking?.documentId}`, // Replace with actual URL
+          table_selections,
         });
         try {
           await strapi.plugin("email").service("email").send({
@@ -224,7 +247,7 @@ export default factories.createCoreController(
 
         return booking;
       } catch (err) {
-        console.log(err)
+        console.log(err);
         ctx.throw(500, err);
       }
     },

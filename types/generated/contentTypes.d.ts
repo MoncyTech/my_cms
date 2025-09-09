@@ -405,10 +405,7 @@ export interface ApiBookingBooking extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     message: Schema.Attribute.Text;
     publishedAt: Schema.Attribute.DateTime;
-    table_selections: Schema.Attribute.Component<
-      'booking.table-selection',
-      true
-    >;
+    table_selections: Schema.Attribute.JSON;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
