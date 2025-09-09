@@ -61,7 +61,7 @@ ${restaurantName} Team
                 ? table_selections
                     .map(
                       (sel: any) =>
-                        `<li><strong>Table Type:</strong> ${sel.tableType || "N/A"}<br/><strong>Quantity:</strong> ${sel.qty || 1}</li>`
+                        `<li><strong>Table Name:</strong> ${sel.tableType || "N/A"}<br/><strong>Quantity:</strong> ${sel.qty || 1}</li>`
                     )
                     .join("")
                 : ""
@@ -132,7 +132,7 @@ Reject: ${rejectUrl}
                 ? table_selections
                     .map(
                       (sel: any) =>
-                        `<li><strong>Table Type:</strong> ${sel.tableType || "N/A"}<br/><strong>Quantity:</strong> ${sel.qty || 1}</li>`
+                        `<li><strong>Table Name:</strong> ${sel.tableType || "N/A"}<br/><strong>Quantity:</strong> ${sel.qty || 1}</li>`
                     )
                     .join("")
                 : ""
