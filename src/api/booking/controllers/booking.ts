@@ -240,6 +240,7 @@ export default factories.createCoreController(
           });
           strapi.log.info("✅ Email sent successfully");
         } catch (err) {
+          console.log({ err_email: err });
           strapi.log.error("❌ Email sending failed", err);
         }
 
