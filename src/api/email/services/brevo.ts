@@ -21,7 +21,6 @@ module.exports = {
         "Content-Type": "application/json",
         Accept: "application/json",
       };
-      console.log({ headers });
       const response = await axios.post(
         "https://api.brevo.com/v3/smtp/email",
         emailData,

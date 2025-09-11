@@ -14,7 +14,12 @@ import {
   Flex,
   IconButton,
 } from '@strapi/design-system';
-import { useFetchClient, useNotification, useAPIErrorHandler } from '@strapi/strapi/admin';
+import {
+  useFetchClient,
+  useNotification,
+  useAPIErrorHandler,
+  useStrapiApp,
+} from '@strapi/strapi/admin';
 import { Textarea } from '@strapi/design-system';
 import { Field } from '@strapi/design-system';
 import { Grid } from '@strapi/design-system';
@@ -54,9 +59,15 @@ const BookingApprovalPage: React.FC = () => {
   const { get, put } = useFetchClient();
   const { toggleNotification } = useNotification();
   const { formatAPIError } = useAPIErrorHandler();
+
   // Cast to any to bypass TypeScript checking
   const token = STRAPI_API_KEY;
   // Fetch bookings
+
+  const getConfig = async () => {
+    const response = await get('/booking-approval/config');
+    console.log(response);
+  };
   const fetchBookings = async () => {
     try {
       setLoading(true);

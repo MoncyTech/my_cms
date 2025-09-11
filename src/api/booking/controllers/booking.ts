@@ -226,13 +226,15 @@ export default factories.createCoreController(
           table_selections,
         });
         try {
-          await strapi.plugin("email").service("email").send({
+          // await strapi.plugin("email").service("email").send({
+          await strapi.service("api::email.brevo").sendEmail({
             to: data.email,
             subject: template_consumer.subject,
             text: template_consumer.text,
             html: template_consumer.html,
           });
-          await strapi.plugins["email"].services.email.send({
+          // await strapi.plugins["email"].services.email.send({
+          await strapi.service("api::email.brevo").sendEmail({
             to: restaurantEmail,
             subject: template_owner.subject,
             text: template_owner.text,

@@ -8,4 +8,10 @@ export default [
       policies: [],
     },
   },
+  {
+    method: 'GET',
+    path: '/config',
+    handler: 'config.getConfig',
+    config: { auth: false }, // set auth:true if you want
+  },
 ];

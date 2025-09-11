@@ -179,7 +179,8 @@ export default {
 
     if (result?.email && template_consumer) {
       try {
-        await strapi.plugins["email"].services.email.send({
+        // await strapi.plugins["email"].services.email.send({
+        await strapi.service("api::email.brevo").sendEmail({
           to: result.email,
           subject: template_consumer.subject,
           text: template_consumer.text,
