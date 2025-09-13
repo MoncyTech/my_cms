@@ -412,6 +412,37 @@ export interface ApiBookingBooking extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiHomeImageHomeImage extends Struct.SingleTypeSchema {
+  collectionName: 'home_images';
+  info: {
+    displayName: 'home_images';
+    pluralName: 'home-images';
+    singularName: 'home-image';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    about_section: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios',
+      true
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::home-image.home-image'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiMenuCategoryMenuCategory
   extends Struct.CollectionTypeSchema {
   collectionName: 'menu_categories';
@@ -1116,6 +1147,7 @@ declare module '@strapi/strapi' {
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
       'api::booking.booking': ApiBookingBooking;
+      'api::home-image.home-image': ApiHomeImageHomeImage;
       'api::menu-category.menu-category': ApiMenuCategoryMenuCategory;
       'api::menu-item.menu-item': ApiMenuItemMenuItem;
       'api::opening-hour.opening-hour': ApiOpeningHourOpeningHour;

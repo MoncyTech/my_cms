@@ -1,0 +1,25 @@
+{
+  "kind": "singleType",
+  "collectionName": "home_images",
+  "info": {
+    "singularName": "home-image",
+    "pluralName": "home-images",
+    "displayName": "home_images"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "about_section": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    }
+  }
+}
