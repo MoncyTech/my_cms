@@ -79,6 +79,7 @@ export function bookingRequestOwnerTemplate({
   bookingId,
   customerName,
   customerEmail,
+  customerPhone, // ✅ added
   restaurantName,
   bookingDate,
   bookingTime,
@@ -90,6 +91,7 @@ export function bookingRequestOwnerTemplate({
   bookingId: string | number;
   customerName: string;
   customerEmail: string;
+  customerPhone: string; // ✅ added
   restaurantName: string;
   bookingDate: string;
   bookingTime: string;
@@ -107,6 +109,7 @@ You have received a new booking request:
 
 - Booking ID: ${bookingId}
 - Customer: ${customerName} (${customerEmail})
+- Phone: ${customerPhone}
 - Date: ${bookingDate}
 - Time: ${bookingTime}
 - Guests: ${guests}
@@ -124,6 +127,7 @@ Reject: ${rejectUrl}
         <ul>
           <li><strong>Booking ID:</strong> ${bookingId}</li>
           <li><strong>Customer:</strong> ${customerName} (${customerEmail})</li>
+          <li><strong>Phone:</strong> ${customerPhone}</li>
           <li><strong>Date:</strong> ${bookingDate}</li>
           <li><strong>Time:</strong> ${bookingTime}</li>
           <li><strong>Guests:</strong> ${guests}</li>
@@ -170,6 +174,7 @@ export default factories.createCoreController(
           table_selections,
           guests = 1,
           message,
+          phone, // ✅ added
         } = ctx.request.body;
         const data = {
           customer_name: name,
@@ -182,8 +187,8 @@ export default factories.createCoreController(
           publishedAt: null,
           booking_id: generateBookingId(),
           table_selections: table_selections || [], // sel should be array of component values
+          customerPhone: phone, // ✅ added
         };
-
         // ✅ validations
         if (!data.customer_name) return ctx.badRequest("Name is required");
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email))
@@ -224,6 +229,7 @@ export default factories.createCoreController(
           approveUrl: `${process.env.BASE_URL_CMS}/admin/plugins/booking-approval/bookings/${booking?.documentId}`, // Replace with actual URL
           rejectUrl: `${process.env.BASE_URL_CMS}/admin/plugins/booking-approval/bookings/${booking?.documentId}`, // Replace with actual URL
           table_selections,
+          customerPhone: data.customerPhone || "N/A", // ✅ added
         });
         try {
           // await strapi.plugin("email").service("email").send({
