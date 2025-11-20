@@ -25,10 +25,8 @@
     "type": {
       "type": "enumeration",
       "required": true,
-      "enum": [
-        "veg",
-        "non-veg"
-      ]
+      "enum": ["veg", "non-veg", "none"],
+      "default": "none"
     },
     "isPopular": {
       "type": "boolean",
