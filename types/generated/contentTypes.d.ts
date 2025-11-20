@@ -506,8 +506,9 @@ export interface ApiMenuItemMenuItem extends Struct.CollectionTypeSchema {
     name: Schema.Attribute.String & Schema.Attribute.Required;
     price: Schema.Attribute.Decimal & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
-    type: Schema.Attribute.Enumeration<['veg', 'non-veg']> &
-      Schema.Attribute.Required;
+    type: Schema.Attribute.Enumeration<['veg', 'non-veg', 'none']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'none'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
