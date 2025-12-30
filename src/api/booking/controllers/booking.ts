@@ -207,7 +207,7 @@ export default factories.createCoreController(
           bookingId: data.booking_id,
           customerName: data.customer_name,
           restaurantName: restaurantName, // Replace with actual restaurant name if available
-          bookingDate: data.booking_startAt,
+          bookingDate: new Date(data.booking_startAt).toLocaleDateString(),
           bookingTime: new Date(data.booking_startAt).toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
@@ -220,7 +220,7 @@ export default factories.createCoreController(
           customerName: data.customer_name,
           customerEmail: data.email,
           restaurantName: restaurantName, // Replace with actual restaurant name if available
-          bookingDate: data.booking_startAt,
+          bookingDate: new Date(data.booking_startAt).toLocaleDateString(),
           bookingTime: new Date(data.booking_startAt).toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
